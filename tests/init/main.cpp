@@ -1,4 +1,5 @@
-#include "l_system_generator/grammar/base_grammar.h"
+#include "LSystemGenerator/Grammar/BaseGrammar.hpp"
+
 
 int main()
 {

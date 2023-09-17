@@ -16,7 +16,6 @@ class LSystemAPI ContextPredecessor : public Predecessor
 public:
     enum class Context
     {
-        NONE,
         RIGHT,
         LEFT,
 
@@ -24,9 +23,15 @@ public:
 
     ContextPredecessor();
 
+    ContextPredecessor(const char letter);
+
     [[nodiscard]] bool add(const Predecessor* predecessor, const ContextPredecessor::Context context);
 
-    [[nodiscard]] bool contains(const ContextPredecessor::Context constext) const;
+    [[nodiscard]] bool contains(const ContextPredecessor::Context context) const;
+
+    const Predecessor* getPredecessor(const ContextPredecessor::Context context) const;
+
+//    Predecessor* getPredecessor(const ContextPredecessor::Context context);
 
 private:
     std::map<Context, const Predecessor*> m_predecessors;

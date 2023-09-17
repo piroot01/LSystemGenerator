@@ -22,30 +22,32 @@ TEST_CASE("[Grammar] ContextPredecessor")
         {
             STATIC_CHECK(std::is_default_constructible_v<ls::ContextPredecessor>);
         }
+
+        SECTION("Letter construction")
+        {
+            const ls::ContextPredecessor contextPredecessor('A');
+            CHECK(contextPredecessor.letter == 'A');
+        }
     }
 
     SECTION("add()")
     {
         ls::ContextPredecessor contextPredecessor;
         const auto leftContext = std::make_unique<ls::Predecessor>('L');
-        const auto noneContext = std::make_unique<ls::Predecessor>('N');
         const auto rightContext = std::make_unique<ls::Predecessor>('R');
         CHECK(contextPredecessor.add(leftContext.get(), ls::ContextPredecessor::Context::LEFT));
-        CHECK(contextPredecessor.add(noneContext.get(), ls::ContextPredecessor::Context::NONE));
         CHECK(contextPredecessor.add(rightContext.get(), ls::ContextPredecessor::Context::RIGHT));
-        CHECK_FALSE(contextPredecessor.add(noneContext.get(), ls::ContextPredecessor::Context::NONE));
+        CHECK_FALSE(contextPredecessor.add(rightContext.get(), ls::ContextPredecessor::Context::RIGHT));
     }
 
     SECTION("add() different Predecessor types")
     {
         ls::ContextPredecessor contextPredecessor;
-        const auto leftContext = std::make_unique<ls::Predecessor>('L');
-        auto noneContext = std::make_unique<ls::ParametrizedPredecessor>();
-        noneContext->append('A');
+        auto leftContext = std::make_unique<ls::ParametrizedPredecessor>();
+        leftContext->append('A');
         // Also possible, but not recommended
         auto rightContext = std::make_unique<ls::ContextPredecessor>();
         CHECK(contextPredecessor.add(leftContext.get(), ls::ContextPredecessor::Context::LEFT));
-        CHECK(contextPredecessor.add(noneContext.get(), ls::ContextPredecessor::Context::NONE));
         CHECK(contextPredecessor.add(rightContext.get(), ls::ContextPredecessor::Context::RIGHT));
     }
 
@@ -53,12 +55,29 @@ TEST_CASE("[Grammar] ContextPredecessor")
     {
         ls::ContextPredecessor contextPredecessor;
         const auto leftContext = std::make_unique<ls::Predecessor>('L');
-        const auto noneContext = std::make_unique<ls::Predecessor>('N');
         CHECK(contextPredecessor.add(leftContext.get(), ls::ContextPredecessor::Context::LEFT));
-        CHECK(contextPredecessor.add(noneContext.get(), ls::ContextPredecessor::Context::NONE));
         CHECK(contextPredecessor.contains(ls::ContextPredecessor::Context::LEFT));
-        CHECK(contextPredecessor.contains(ls::ContextPredecessor::Context::NONE));
         CHECK_FALSE(contextPredecessor.contains(ls::ContextPredecessor::Context::RIGHT));
+    }
+
+    SECTION("getPredecessor()")
+    {
+        ls::ContextPredecessor contextPredecessor;
+        const auto leftContext = std::make_unique<ls::Predecessor>('L');
+        auto rightContext = std::make_unique<ls::ParametrizedPredecessor>();
+        rightContext->append('R');
+        CHECK(contextPredecessor.add(leftContext.get(), ls::ContextPredecessor::Context::LEFT));
+        CHECK(contextPredecessor.add(rightContext.get(), ls::ContextPredecessor::Context::RIGHT));
+        CHECK(contextPredecessor.getPredecessor(ls::ContextPredecessor::Context::LEFT)->letter == 'L');
+        CHECK((*static_cast<const ls::ParametrizedPredecessor*>(contextPredecessor.getPredecessor(ls::ContextPredecessor::Context::RIGHT)))[0] == 'R');
+    }
+
+    SECTION("getPredecessor() exception")
+    {
+        ls::ContextPredecessor contextPredecessor;
+        const auto leftContext = std::make_unique<ls::Predecessor>();
+        CHECK(contextPredecessor.add(leftContext.get(), ls::ContextPredecessor::Context::LEFT));
+        CHECK_THROWS_AS(contextPredecessor.getPredecessor(ls::ContextPredecessor::Context::RIGHT), std::runtime_error);
     }
 
 }

@@ -12,10 +12,10 @@ set(CMAKE_BUILD_TYPE Debug)
 
 # Basic paths
 set(LSYSTEM_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-set(TESTS_DIR ${LSYSTEM_DIR}/tests)
+set(TESTS_DIR ${LSYSTEM_DIR}/test)
 
 # The project
 add_subdirectory(${PROJECT_NAME})
 
 # The tests
-add_subdirectory(tests)
+add_subdirectory(test)

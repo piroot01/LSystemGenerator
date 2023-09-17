@@ -9,6 +9,12 @@ namespace ls
 ParametrizedPredecessor::ParametrizedPredecessor() = default;
 
 
+ParametrizedPredecessor::ParametrizedPredecessor(const char letter) :
+    Predecessor(letter)
+{
+}
+
+
 std::size_t ParametrizedPredecessor::getParameterCount() const
 {
     return m_parameters.size();

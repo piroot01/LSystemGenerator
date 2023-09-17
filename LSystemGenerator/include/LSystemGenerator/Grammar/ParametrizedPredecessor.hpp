@@ -11,7 +11,7 @@ namespace ls
 {
 
 
-class LSystemAPI ParametrizedPredecessor : private Predecessor
+class LSystemAPI ParametrizedPredecessor : public Predecessor
 {
 public:
     ParametrizedPredecessor();

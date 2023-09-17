@@ -11,7 +11,7 @@ namespace ls
 {
 
 
-class LSystemAPI ContextPredecessor : private Predecessor
+class LSystemAPI ContextPredecessor : public Predecessor
 {
 public:
     enum class Context

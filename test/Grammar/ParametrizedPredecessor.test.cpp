@@ -21,6 +21,12 @@ TEST_CASE("[Grammar] ls::ParametrizedPredecessor")
             const ls::ParametrizedPredecessor parametrizedPredecessor;
             CHECK(parametrizedPredecessor.getParameterCount() == 0);
         }
+
+        SECTION("Letter construction")
+        {
+            const ls::ParametrizedPredecessor parametrizedPredecessor('A');
+            CHECK(parametrizedPredecessor.letter == 'A');
+        }
     }
 
     SECTION("operator[]")

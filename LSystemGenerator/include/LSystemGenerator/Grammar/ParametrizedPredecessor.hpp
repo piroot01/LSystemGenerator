@@ -16,6 +16,8 @@ class LSystemAPI ParametrizedPredecessor : public Predecessor
 public:
     ParametrizedPredecessor();
 
+    ParametrizedPredecessor(const char letter);
+
     std::size_t getParameterCount() const;
 
     Parameter& operator[](const std::size_t index);

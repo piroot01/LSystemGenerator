@@ -18,13 +18,13 @@ TEST_CASE("[Grammar] ls::Predecessor")
         SECTION("Default construction")
         {
             constexpr ls::Predecessor predecessor;
-            STATIC_CHECK(predecessor.get() == static_cast<char>(0));
+            STATIC_CHECK(predecessor.letter == static_cast<char>(0));
         }
         
         SECTION("Letter construction")
         {
             constexpr ls::Predecessor predecessor('A');
-            STATIC_CHECK(predecessor.get() == 'A');
+            STATIC_CHECK(predecessor.letter == 'A');
         }
     }
 

@@ -2,8 +2,12 @@
 #define Grammar_ContextPredecessor_INCLUDED
 
 
-#include "LSystemGenerator/Foundation/Foundation.hpp"
-#include "LSystemGenerator/Grammar/Predecessor.hpp"
+#include <LSystemGenerator/Foundation/Foundation.hpp>
+#include <LSystemGenerator/Foundation/ObserverPointer.hpp>
+#include <LSystemGenerator/Grammar/Predecessor.hpp>
+#include <LSystemGenerator/Grammar/SimplePredecessor.hpp>
+#include <type_traits>
+#include <memory>
 #include <map>
 
 
@@ -14,27 +18,64 @@ namespace ls
 class LSystemAPI ContextPredecessor : public Predecessor
 {
 public:
-    enum class Context
+    enum class Part
     {
         RIGHT,
+        MIDDLE,
         LEFT,
 
     };
 
     ContextPredecessor();
 
-    ContextPredecessor(const char letter);
+    ContextPredecessor(const ContextPredecessor&) = delete;
 
-    [[nodiscard]] bool add(const Predecessor* predecessor, const ContextPredecessor::Context context);
+    ContextPredecessor& operator=(const ContextPredecessor&) = delete;
 
-    [[nodiscard]] bool contains(const ContextPredecessor::Context context) const;
+    ContextPredecessor(ContextPredecessor&&) noexcept = default;
 
-    const Predecessor* getPredecessor(const ContextPredecessor::Context context) const;
+    ContextPredecessor& operator=(ContextPredecessor&&) noexcept = default;
 
-//    Predecessor* getPredecessor(const ContextPredecessor::Context context);
+    template <class T, typename = typename std::enable_if_t<!std::is_same_v<std::remove_reference_t<T>, ContextPredecessor> && std::is_base_of_v<SimplePredecessor, std::remove_reference_t<T>>>>
+    static ContextPredecessor create(T&& predecessor = T())
+    {
+        return ContextPredecessor(std::make_unique<T>(predecessor));
+    }
+
+    template <class T, typename = typename std::enable_if_t<!std::is_same_v<std::remove_reference_t<T>, ContextPredecessor> && std::is_base_of_v<SimplePredecessor, std::remove_reference_t<T>>>>
+    void addOrAssignContext(const ContextPredecessor::Part part, T&& predecessor)
+    {
+        m_predecessors.insert_or_assign(part, std::make_unique<std::decay_t<T>>(std::forward<T>(predecessor)));
+    }
+
+    template <class T, typename = typename std::enable_if_t<!std::is_same_v<std::remove_reference_t<T>, ContextPredecessor> && std::is_base_of_v<SimplePredecessor, std::remove_reference_t<T>>>>
+    [[nodiscard]] bool addContext(const ContextPredecessor::Part part, T&& predecessor)
+    {
+        return m_predecessors.insert(std::make_pair(part, std::make_unique<std::decay_t<T>>(std::forward<T>(predecessor)))).second;
+    }
+
+    [[nodiscard]] bool contains(const Part part) const;
+
+    template <class T, typename = typename std::enable_if_t<!std::is_same_v<std::remove_reference_t<T>, ContextPredecessor> && std::is_base_of_v<SimplePredecessor, std::remove_reference_t<T>>>>
+    const foundation::ObserverPointer<T> get(const Part context = Part::MIDDLE)
+    {
+        auto iterator = m_predecessors.find(context);
+        if (iterator != m_predecessors.end())
+        {
+            auto predecessor = static_cast<std::add_pointer_t<T>>(iterator->second.get());
+            return foundation::ObserverPointer<T>(predecessor);
+        }
+        else
+        {
+            throw std::runtime_error("Context not found");
+        }
+    }
+
+protected:
+    ContextPredecessor(std::unique_ptr<SimplePredecessor> pPredecessor);
 
 private:
-    std::map<Context, const Predecessor*> m_predecessors;
+    std::map<Part, std::unique_ptr<SimplePredecessor>> m_predecessors;
 
 };
 

@@ -1,55 +1,44 @@
 #include <LSystemGenerator/Grammar/ContextPredecessor.hpp>
-#include <stdexcept>
+#include <LSystemGenerator/Grammar/ParametrizedPredecessor.hpp>
+#include <utility>
 
 
 namespace ls
 {
 
 
-ContextPredecessor::ContextPredecessor() = default;
-
-
-ContextPredecessor::ContextPredecessor(const char letter) :
-    Predecessor(letter)
+ContextPredecessor::ContextPredecessor()
 {
+    m_predecessors.insert(std::make_pair(Part::MIDDLE, std::make_unique<SimplePredecessor>()));
 }
 
 
-[[nodiscard]] bool ContextPredecessor::add(const Predecessor* predecessor, const ContextPredecessor::Context context)
+ContextPredecessor::ContextPredecessor(std::unique_ptr<SimplePredecessor> pPredecessor)
 {
-    if (this->contains(context))
-        return false;
-
-    m_predecessors.emplace(context, predecessor);
-    return true;
-};
-
-
-[[nodiscard]] bool ContextPredecessor::contains(const ContextPredecessor::Context context) const
-{
-    return m_predecessors.find(context) != m_predecessors.end();
+    m_predecessors.insert(std::make_pair(Part::MIDDLE, std::move(pPredecessor)));
 }
 
 
-const Predecessor* ContextPredecessor::getPredecessor(const ContextPredecessor::Context context) const
+[[nodiscard]] bool ContextPredecessor::contains(const Part part) const
 {
-    auto iterator = m_predecessors.find(context);
-    if (iterator != m_predecessors.end())
-        return iterator->second;
-    else
-        throw std::runtime_error("Context not found.");
+    return m_predecessors.find(part) != m_predecessors.end();
 }
 
 /*
-Predecessor* ContextPredecessor::getPredecessor(const ContextPredecessor::Context context)
+const std::shared_ptr<SimplePredecessor> ContextPredecessor::get(const Part context)
 {
     auto iterator = m_predecessors.find(context);
     if (iterator != m_predecessors.end())
-        return const_cast<Predecessor*>(iterator->second);
+    {
+        auto pPredecessor = std::make_shared<ls::SimplePredecessor>(*(iterator->second));
+        std::cout << std::static_pointer_cast<ls::ParametrizedPredecessor<int>>(pPredecessor)->getParameterCount() << '\n';
+        return pPredecessor;
+    }
     else
+    {
         throw std::runtime_error("Context not found.");
+    }
 }
 */
 
 } // namespace ls
-

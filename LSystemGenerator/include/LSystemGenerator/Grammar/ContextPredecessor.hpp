@@ -60,15 +60,15 @@ public:
     const foundation::ObserverPointer<T> get(const Part context = Part::MIDDLE)
     {
         auto iterator = m_predecessors.find(context);
-        if (iterator != m_predecessors.end())
-        {
-            auto predecessor = static_cast<std::add_pointer_t<T>>(iterator->second.get());
-            return foundation::ObserverPointer<T>(predecessor);
-        }
-        else
-        {
+        if (iterator == m_predecessors.end())
             throw std::runtime_error("Context not found");
-        }
+        
+        auto predecessor = static_cast<std::add_pointer_t<T>>(iterator->second.get());
+        /*
+        if (predecessor == nullptr)
+            throw std::runtime_error("Wrong type");
+        */
+        return foundation::ObserverPointer<T>(predecessor);
     }
 
 protected:

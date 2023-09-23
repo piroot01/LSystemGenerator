@@ -4,92 +4,75 @@
 
 #include <LSystemGenerator/Foundation/Foundation.hpp>
 #include <LSystemGenerator/Grammar/SimplePredecessor.hpp>
-#include <LSystemGenerator/Grammar/ParameterArray.hpp>
+#include <LSystemGenerator/Grammar/ParameterMap.hpp>
 #include <cassert>
+#include <cstdint>
 
 
 namespace ls
 {
 
 
+template <class T>
 class LSystemAPI ParametrizedPredecessor : public SimplePredecessor
 {
 public:
-    constexpr ParametrizedPredecessor() noexcept;
+    ParametrizedPredecessor() = default;
 
-    constexpr ParametrizedPredecessor(const char letter) noexcept;
+    explicit ParametrizedPredecessor(const char letter) :
+        SimplePredecessor(letter)
+    {
+    }
 
-    constexpr ParametrizedPredecessor(const char letter, const std::size_t size) noexcept;
+    std::size_t getParameterCount() const noexcept
+    {
+        return m_parameters.size();
+    }
 
-    constexpr std::size_t getParameterCount() const noexcept;
+    T& operator[](const Parameter index)
+    {
+        assert(m_parameters.contains(index));
+        return m_parameters[index];
+    }
 
-    constexpr Parameter& operator[](const std::size_t index);
+    const T& operator[](const Parameter index) const
+    {
+        assert(m_parameters.contains(index));
+        return m_parameters[index];
+    }
 
-    constexpr const Parameter& operator[](const std::size_t index) const;
+    T& at(const Parameter index)
+    {
+        return (*this)[index];
+    }
 
-    constexpr void clear() noexcept;
+    const T& at(const Parameter index) const
+    {
+        return (*this)[index];
+    }
 
-    constexpr void resize(const std::size_t parameterCount);
+    void clear() noexcept
+    {
+        m_parameters.clear();
+    }
 
-    constexpr void appendParameter(const Parameter& parameter);
+    void insertOrAssignParameter(const Parameter parameter, T&& value)
+    {
+        m_parameters.insert_or_assign(parameter, std::forward<T>(value));
+    }
+
+    bool insertParameter(const Parameter parameter, T&& value)
+    {
+        return m_parameters.insert(std::make_pair(parameter, std::forward<T>(value))).second;
+    }
 
 private:
-    ParameterArray m_parameters;
+    ParameterMap<T> m_parameters;
 
 };
 
 
-constexpr ParametrizedPredecessor::ParametrizedPredecessor() noexcept = default;
-
-
-constexpr ParametrizedPredecessor::ParametrizedPredecessor(const char letter) noexcept :
-    SimplePredecessor(letter)
-{
-}
-
-
-constexpr ParametrizedPredecessor::ParametrizedPredecessor(const char letter, const std::size_t size) noexcept :
-    SimplePredecessor(letter), m_parameters(size)
-{
-}
-
-
-constexpr inline std::size_t ParametrizedPredecessor::getParameterCount() const noexcept
-{
-    return m_parameters.size();
-}
-
-
-constexpr inline Parameter& ParametrizedPredecessor::operator[](const std::size_t index)
-{
-    assert(index < m_parameters.size());
-    return m_parameters[index];
-}
-
-
-constexpr inline const Parameter& ParametrizedPredecessor::operator[](const std::size_t index) const
-{
-    assert(index < m_parameters.size());
-    return m_parameters[index];
-}
-
-
-constexpr inline void ParametrizedPredecessor::clear() noexcept
-{
-    m_parameters.clear();
-}
-
-
-constexpr inline void ParametrizedPredecessor::resize(const std::size_t parameterCount)
-{
-    m_parameters.resize(parameterCount);
-}
-
-
-constexpr inline void ParametrizedPredecessor::appendParameter(const Parameter& parameter)
-{
-    m_parameters.push_back(parameter);
-}
+using ParametrizedPredecessor_int = ParametrizedPredecessor<std::int32_t>;
 
 
 } // namespace ls

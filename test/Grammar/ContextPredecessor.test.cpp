@@ -15,7 +15,7 @@ TEST_CASE("[Grammar] ContextPredecessor")
         STATIC_CHECK(std::is_nothrow_move_constructible_v<ls::ContextPredecessor>);
         STATIC_CHECK(std::is_nothrow_move_assignable_v<ls::ContextPredecessor>);
     }
-/*
+
     SECTION("Construction")
     {
         SECTION("Default constructor")
@@ -26,20 +26,20 @@ TEST_CASE("[Grammar] ContextPredecessor")
         SECTION("Base predecessor (SimplePredecessor) construction")
         {
             ls::ContextPredecessor contextPredecessor;
-            CHECK(std::is_same_v<decltype(contextPredecessor.get()), const std::shared_ptr<ls::SimplePredecessor>>);
+            CHECK(std::is_same_v<decltype(contextPredecessor.get<ls::SimplePredecessor>()), const foundation::ObserverPointer<ls::SimplePredecessor>>);
             auto simpleContextPredecessor = ls::ContextPredecessor::create<ls::SimplePredecessor>('A');
-            CHECK(std::is_same_v<decltype(simpleContextPredecessor.get()), decltype(contextPredecessor.get())>);
+            CHECK(std::is_same_v<decltype(simpleContextPredecessor.get<ls::SimplePredecessor>()), decltype(contextPredecessor.get<ls::SimplePredecessor>())>);
         }
 
         SECTION("Base predecessor (ParametrizedPredecessor) construction")
         {
             ls::ContextPredecessor contextParametrizedPredecessor = ls::ContextPredecessor::create<ls::ParametrizedPredecessor_int>();
-            CHECK(std::is_same_v<decltype(contextParametrizedPredecessor.get()), const std::shared_ptr<ls::SimplePredecessor>>);
+            CHECK(std::is_same_v<decltype(contextParametrizedPredecessor.get<ls::ParametrizedPredecessor_int>()), const foundation::ObserverPointer<ls::ParametrizedPredecessor_int>>);
             
         }
 
     }
-*/
+
     SECTION("insertOrAssignPredecessor()")
     {
         ls::ContextPredecessor contextPredecessor;

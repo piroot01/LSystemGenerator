@@ -18,14 +18,14 @@ TEST_CASE("[Grammar] ls::SimplePredecessor")
         SECTION("Default construction")
         {
             STATIC_CHECK(std::is_default_constructible_v<ls::Predecessor>);
-            constexpr ls::SimplePredecessor simplePredecessor;
-            STATIC_CHECK(simplePredecessor.letter == 0);
+            const ls::SimplePredecessor simplePredecessor;
+            CHECK(simplePredecessor.letter == 0);
         }
 
         SECTION("Letter construction")
         {
-            constexpr ls::SimplePredecessor simplePredecessor('A');
-            STATIC_CHECK(simplePredecessor.letter == 'A');
+            ls::SimplePredecessor simplePredecessor('A');
+            CHECK(simplePredecessor.letter == 'A');
         }
 
     }

@@ -3,6 +3,8 @@
 
 
 #include <LSystemGenerator/Foundation/Foundation.hpp>
+#include <cassert>
+
 
 namespace foundation
 {
@@ -36,18 +38,22 @@ public:
     {
     }
 
-    constexpr __pointer get() const noexcept
+    constexpr __pointer getRaw() const noexcept
     {
         return m_pointer;
     }
     
-    constexpr __reference operator*() const noexcept
+    constexpr __reference operator*() const
     {
+        if (m_pointer == nullptr)
+            throw std::runtime_error("Null pointer exception.");
         return *m_pointer;
     }
 
-    constexpr __pointer operator->() const noexcept
+    constexpr __pointer operator->() const
     {
+        if (m_pointer == nullptr)
+            throw std::runtime_error("Null pointer exception.");
         return m_pointer;
     }
 
@@ -63,7 +69,7 @@ public:
 
     constexpr __pointer release() noexcept
     {
-        __pointer pointer = this->get();
+        __pointer pointer = this->getRaw();
         this->reset();
         return pointer;
     }

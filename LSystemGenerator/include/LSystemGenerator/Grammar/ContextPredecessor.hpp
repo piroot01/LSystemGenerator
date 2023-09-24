@@ -61,13 +61,13 @@ public:
     {
         auto iterator = m_predecessors.find(context);
         if (iterator == m_predecessors.end())
-            throw std::runtime_error("Context not found");
-        
-        auto predecessor = static_cast<std::add_pointer_t<T>>(iterator->second.get());
-        /*
+            throw std::runtime_error("Context not found.");
+
+        auto predecessor = dynamic_cast<std::add_pointer_t<T>>(iterator->second.get());
+
         if (predecessor == nullptr)
-            throw std::runtime_error("Wrong type");
-        */
+            throw std::runtime_error("Invalid type for dynamic_cast.");
+
         return foundation::ObserverPointer<T>(predecessor);
     }
 

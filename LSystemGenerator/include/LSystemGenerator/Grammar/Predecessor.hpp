@@ -18,9 +18,11 @@ public:
 
     constexpr Predecessor(Predecessor&&) noexcept;
 
-    constexpr Predecessor& operator=(const Predecessor&) noexcept;
+    Predecessor& operator=(const Predecessor&) noexcept;
 
-    constexpr Predecessor& operator=(Predecessor&&) noexcept;
+    Predecessor& operator=(Predecessor&&) noexcept;
+
+    virtual ~Predecessor();
 
 };
 
@@ -34,10 +36,10 @@ constexpr inline Predecessor::Predecessor(const Predecessor&) noexcept = default
 constexpr inline Predecessor::Predecessor(Predecessor&&) noexcept = default;
 
 
-constexpr inline Predecessor& Predecessor::operator=(const Predecessor&) noexcept = default;
+inline Predecessor& Predecessor::operator=(const Predecessor&) noexcept = default;
 
 
-constexpr inline Predecessor& Predecessor::operator=(Predecessor&&) noexcept = default;
+inline Predecessor& Predecessor::operator=(Predecessor&&) noexcept = default;
 
 
 } // namespace ls

@@ -1,6 +1,7 @@
 #include <LSystemGenerator/Foundation/ObserverPointer.hpp>
 #include <LSystemGenerator/Grammar/SimplePredecessor.hpp>
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_exception.hpp>
 #include <type_traits>
 #include <string>
 
@@ -26,7 +27,7 @@ TEST_CASE("[Foundation] foundation::ObserverPointer")
         SECTION("New pointer construction")
         {
             foundation::ObserverPointer<TestType> ptr(new TestType);
-            CHECK(ptr.get()->length() == 0);
+            CHECK(ptr.getRaw()->length() == 0);
         }
 
         SECTION("Existing pointer construction")
@@ -40,14 +41,14 @@ TEST_CASE("[Foundation] foundation::ObserverPointer")
         {
             foundation::ObserverPointer<TestType> ptr1(new TestType);
             foundation::ObserverPointer<TestType> ptr2(ptr1);
-            CHECK(ptr1.get() == ptr2.get());
+            CHECK(ptr1.getRaw() == ptr2.getRaw());
         }
     }
 
-    SECTION("get()")
+    SECTION("getRaw()")
     {
         foundation::ObserverPointer<TestType> ptr(new TestType("string"));
-        CHECK(ptr.get()->length() == std::string("string").length());
+        CHECK(ptr.getRaw()->length() == std::string("string").length());
     }
 
     SECTION("*operator")
@@ -56,10 +57,24 @@ TEST_CASE("[Foundation] foundation::ObserverPointer")
         CHECK((*ptr).length() == std::string("string").length());
     }
 
+    SECTION("*operator Null pointer exception")
+    {
+        foundation::ObserverPointer<TestType> ptr(new TestType("string"));
+        ptr.release();
+        CHECK_THROWS_MATCHES(ptr->append("string"), std::runtime_error, Catch::Matchers::Message("Null pointer exception."));
+    }
+
     SECTION("->operator")
     {
         foundation::ObserverPointer<TestType> ptr(new TestType("string"));
         CHECK(ptr->length() == std::string("string").length());
+    }
+
+    SECTION("*operator Null pointer exception")
+    {
+        foundation::ObserverPointer<TestType> ptr(new TestType("string"));
+        ptr.release();
+        CHECK_THROWS_MATCHES(ptr->append("string"), std::runtime_error, Catch::Matchers::Message("Null pointer exception."));
     }
 
     SECTION("Bool conversion operator")

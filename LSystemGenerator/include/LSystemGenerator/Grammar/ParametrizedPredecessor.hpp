@@ -5,8 +5,8 @@
 #include <LSystemGenerator/Foundation/Foundation.hpp>
 #include <LSystemGenerator/Grammar/SimplePredecessor.hpp>
 #include <LSystemGenerator/Grammar/ParameterMap.hpp>
-#include <cassert>
-#include <cstdint>
+#include <exprtk.hpp>
+#include <string>
 
 
 namespace ls
@@ -19,64 +19,24 @@ class LSystemAPI ParametrizedPredecessor : public SimplePredecessor
 public:
     ParametrizedPredecessor() = default;
 
-    explicit ParametrizedPredecessor(const char letter) :
+    ParametrizedPredecessor(const char letter) :
         SimplePredecessor(letter)
     {
     }
 
-    std::size_t getParameterCount() const noexcept
+    void registerSymbols(exprtk::symbol_table<T>& symbolTable)
     {
-        return m_parameters.size();
+        for (auto iterator = this->parameters.begin(); iterator != this->parameters.end(); ++iterator)
+            symbolTable.add_variable(std::string(1, iterator->first), iterator->second);
     }
 
-    T& operator[](const Parameter index)
-    {
-        assert(m_parameters.contains(index));
-        return m_parameters[index];
-    }
-
-    const T& operator[](const Parameter index) const
-    {
-        assert(m_parameters.contains(index));
-        return m_parameters[index];
-    }
-
-    T& at(const Parameter index)
-    {
-        return (*this)[index];
-    }
-
-    const T& at(const Parameter index) const
-    {
-        return (*this)[index];
-    }
-
-    void clear() noexcept
-    {
-        m_parameters.clear();
-    }
-
-    void insertOrAssignParameter(const Parameter parameter, T&& value)
-    {
-        m_parameters.insert_or_assign(parameter, std::forward<T>(value));
-    }
-
-    bool insertParameter(const Parameter parameter, T&& value)
-    {
-        return m_parameters.insert(std::make_pair(parameter, std::forward<T>(value))).second;
-    }
-
-private:
-    ParameterMap<T> m_parameters;
+public:
+    detail::ParameterMap<T> parameters;
 
 };
 
 
-using ParametrizedPredecessor_int = ParametrizedPredecessor<std::int32_t>;
-
-
-} // namespace ls
+};
 
 
 #endif
-

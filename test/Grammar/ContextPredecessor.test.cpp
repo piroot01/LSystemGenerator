@@ -35,8 +35,8 @@ TEST_CASE("[Grammar] ContextPredecessor")
 
         SECTION("Base predecessor (ParametrizedPredecessor) construction")
         {
-            ls::ContextPredecessor contextParametrizedPredecessor = ls::ContextPredecessor::create<ls::ParametrizedPredecessor_int>();
-            CHECK(std::is_same_v<decltype(contextParametrizedPredecessor.get<ls::ParametrizedPredecessor_int>()), const foundation::ObserverPointer<ls::ParametrizedPredecessor_int>>);
+            ls::ContextPredecessor contextParametrizedPredecessor = ls::ContextPredecessor::create<ls::ParametrizedPredecessor<int>>();
+            CHECK(std::is_same_v<decltype(contextParametrizedPredecessor.get<ls::ParametrizedPredecessor<int>>()), const foundation::ObserverPointer<ls::ParametrizedPredecessor<int>>>);
             
         }
 
@@ -86,14 +86,14 @@ TEST_CASE("[Grammar] ContextPredecessor")
     {
         ls::ContextPredecessor contextPredecessor;
         const auto leftContext = ls::SimplePredecessor('L');
-        auto rightContext = ls::ParametrizedPredecessor_int('R');
-        rightContext.insertParameter('x', 100);
+        auto rightContext = ls::ParametrizedPredecessor<int>('R');
+        rightContext.parameters.insertParameter('x', 100);
         CHECK(contextPredecessor.addContext(ls::ContextPredecessor::Part::LEFT, leftContext));
         CHECK(contextPredecessor.addContext(ls::ContextPredecessor::Part::RIGHT, rightContext));
         auto pLeftContext = contextPredecessor.get<ls::SimplePredecessor>(ls::ContextPredecessor::Part::LEFT);
         CHECK(pLeftContext->letter == 'L');
-        auto pRightContext = contextPredecessor.get<ls::ParametrizedPredecessor_int>(ls::ContextPredecessor::Part::RIGHT);
-        CHECK(pRightContext->at('x') == 100);
+        auto pRightContext = contextPredecessor.get<ls::ParametrizedPredecessor<int>>(ls::ContextPredecessor::Part::RIGHT);
+        CHECK(pRightContext->parameters.at('x') == 100);
     }
 
     SECTION("get() 'Context not found' exception")
@@ -109,7 +109,7 @@ TEST_CASE("[Grammar] ContextPredecessor")
         ls::ContextPredecessor contextPredecessor = ls::ContextPredecessor::create<ls::SimplePredecessor>();
         const auto leftContext = ls::SimplePredecessor('L');
         CHECK(contextPredecessor.addContext(ls::ContextPredecessor::Part::LEFT, leftContext));
-        CHECK_THROWS_MATCHES(contextPredecessor.get<ls::ParametrizedPredecessor_int>(ls::ContextPredecessor::Part::LEFT), std::runtime_error, Catch::Matchers::Message("Invalid type for dynamic_cast."));
+        CHECK_THROWS_MATCHES(contextPredecessor.get<ls::ParametrizedPredecessor<int>>(ls::ContextPredecessor::Part::LEFT), std::runtime_error, Catch::Matchers::Message("Invalid type for dynamic_cast."));
     }
 
 }

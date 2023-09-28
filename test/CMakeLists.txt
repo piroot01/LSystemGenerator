@@ -21,6 +21,7 @@ endforeach()
 set(GRAMMAR_TESTS
     Grammar/Predecessor.test.cpp
     Grammar/SimplePredecessor.test.cpp
+    Grammar/ParameterMap.test.cpp
     Grammar/ParametrizedPredecessor.test.cpp
     Grammar/ContextPredecessor.test.cpp
 )

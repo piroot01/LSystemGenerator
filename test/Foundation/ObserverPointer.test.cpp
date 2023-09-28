@@ -9,6 +9,7 @@
 TEST_CASE("[Foundation] foundation::ObserverPointer")
 {
     typedef std::string TestType;
+
     SECTION("Type traits")
     {
         STATIC_CHECK(std::is_copy_constructible_v<foundation::ObserverPointer<TestType>>);
@@ -17,7 +18,7 @@ TEST_CASE("[Foundation] foundation::ObserverPointer")
         STATIC_CHECK(std::is_nothrow_copy_assignable_v<foundation::ObserverPointer<TestType>>);
     }
 
-    SECTION("Construction")
+   SECTION("Construction")
     {
         SECTION("Default construction")
         {

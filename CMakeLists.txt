@@ -14,6 +14,9 @@ set(CMAKE_BUILD_TYPE Debug)
 set(LSYSTEM_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(TESTS_DIR ${LSYSTEM_DIR}/test)
 
+
+include_directories(exprtk)
+
 # The project
 add_subdirectory(${PROJECT_NAME})
 

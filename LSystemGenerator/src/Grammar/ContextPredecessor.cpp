@@ -7,23 +7,6 @@ namespace ls
 {
 
 
-ContextPredecessor::ContextPredecessor()
-{
-    m_predecessors.insert(std::make_pair(Part::MIDDLE, std::make_unique<SimplePredecessor>()));
-}
-
-
-ContextPredecessor::ContextPredecessor(std::unique_ptr<SimplePredecessor> pPredecessor)
-{
-    m_predecessors.insert(std::make_pair(Part::MIDDLE, std::move(pPredecessor)));
-}
-
-
-[[nodiscard]] bool ContextPredecessor::contains(const Part part) const
-{
-    return m_predecessors.find(part) != m_predecessors.end();
-}
-
 /*
 const std::shared_ptr<SimplePredecessor> ContextPredecessor::get(const Part context)
 {

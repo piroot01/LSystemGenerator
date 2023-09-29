@@ -25,7 +25,7 @@ public:
 public:
     ParameterMap() = default;
 
-    std::size_t getParameterCount() const noexcept
+    inline std::size_t getParameterCount() const noexcept
     {
         return m_parameterMap.size();
     }
@@ -52,37 +52,37 @@ public:
         return (*this)[index];
     }
 
-    void clear() noexcept
+    inline void clear() noexcept
     {
         m_parameterMap.clear();
     }
 
-    void insertOrAssignParameter(const __parameter parameter, T&& value)
+    inline void insertOrAssignParameter(const __parameter parameter, T&& value = T{})
     {
         m_parameterMap.insert_or_assign(parameter, std::forward<T>(value));
     }
 
-    bool insertParameter(const __parameter parameter, T&& value)
+    inline bool insertParameter(const __parameter parameter, T&& value = T{})
     {
         return m_parameterMap.insert(std::make_pair(parameter, std::forward<T>(value))).second;
     }
 
-    auto begin()
+    inline auto begin()
     {
         return m_parameterMap.begin();
     }
 
-    auto end()
+    inline auto end()
     {
         return m_parameterMap.end();
     }
 
-    auto cbegin()
+    inline auto cbegin()
     {
         return m_parameterMap.cbegin();
     }
 
-    auto cend()
+    inline auto cend()
     {
         return m_parameterMap.cend();
     }

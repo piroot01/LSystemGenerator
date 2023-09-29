@@ -37,19 +37,19 @@ public:
     ContextPredecessor& operator=(ContextPredecessor&&) noexcept = default;
 
     template <class T, typename = typename std::enable_if_t<!std::is_same_v<std::remove_reference_t<T>, ContextPredecessor> && std::is_base_of_v<SimplePredecessor, std::remove_reference_t<T>>>>
-    static ContextPredecessor create(T&& predecessor = T())
+    inline static ContextPredecessor create(T&& predecessor = T())
     {
         return ContextPredecessor(std::make_unique<std::decay_t<T>>(std::forward<T>(predecessor)));
     }
 
     template <class T, typename = typename std::enable_if_t<!std::is_same_v<std::remove_reference_t<T>, ContextPredecessor> && std::is_base_of_v<SimplePredecessor, std::remove_reference_t<T>>>>
-    void addOrAssignContext(const ContextPredecessor::Part part, T&& predecessor)
+    inline void addOrAssignContext(const ContextPredecessor::Part part, T&& predecessor)
     {
         m_predecessors.insert_or_assign(part, std::make_unique<std::decay_t<T>>(std::forward<T>(predecessor)));
     }
 
     template <class T, typename = typename std::enable_if_t<!std::is_same_v<std::remove_reference_t<T>, ContextPredecessor> && std::is_base_of_v<SimplePredecessor, std::remove_reference_t<T>>>>
-    [[nodiscard]] bool addContext(const ContextPredecessor::Part part, T&& predecessor)
+    [[nodiscard]] inline bool addContext(const ContextPredecessor::Part part, T&& predecessor)
     {
         return m_predecessors.insert(std::make_pair(part, std::make_unique<std::decay_t<T>>(std::forward<T>(predecessor)))).second;
     }
@@ -75,6 +75,24 @@ private:
     std::map<Part, std::unique_ptr<SimplePredecessor>> m_predecessors;
 
 };
+
+
+inline ContextPredecessor::ContextPredecessor()
+{
+    m_predecessors.insert(std::make_pair(Part::MIDDLE, std::make_unique<SimplePredecessor>()));
+}
+
+
+inline ContextPredecessor::ContextPredecessor(std::unique_ptr<SimplePredecessor> pPredecessor)
+{
+    m_predecessors.insert(std::make_pair(Part::MIDDLE, std::move(pPredecessor)));
+}
+
+
+[[nodiscard]] inline bool ContextPredecessor::contains(const Part part) const
+{
+    return m_predecessors.find(part) != m_predecessors.end();
+}
 
 
 } // namespace ls

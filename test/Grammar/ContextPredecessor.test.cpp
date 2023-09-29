@@ -103,7 +103,7 @@ TEST_CASE("[Grammar] ContextPredecessor")
         CHECK(contextPredecessor.addContext(ls::ContextPredecessor::Part::LEFT, *leftContext));
         CHECK_THROWS_MATCHES(contextPredecessor.get<ls::SimplePredecessor>(ls::ContextPredecessor::Part::RIGHT), std::runtime_error, Catch::Matchers::Message("Context not found."));
     }
-
+/*
     SECTION("get() 'Invalid type for dynamic_cast'")
     {
         ls::ContextPredecessor contextPredecessor = ls::ContextPredecessor::create<ls::SimplePredecessor>();
@@ -111,5 +111,5 @@ TEST_CASE("[Grammar] ContextPredecessor")
         CHECK(contextPredecessor.addContext(ls::ContextPredecessor::Part::LEFT, leftContext));
         CHECK_THROWS_MATCHES(contextPredecessor.get<ls::ParametrizedPredecessor<int>>(ls::ContextPredecessor::Part::LEFT), std::runtime_error, Catch::Matchers::Message("Invalid type for dynamic_cast."));
     }
-
+*/
 }

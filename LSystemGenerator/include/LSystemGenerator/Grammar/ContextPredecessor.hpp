@@ -39,7 +39,7 @@ public:
     template <class T, typename = typename std::enable_if_t<!std::is_same_v<std::remove_reference_t<T>, ContextPredecessor> && std::is_base_of_v<SimplePredecessor, std::remove_reference_t<T>>>>
     static ContextPredecessor create(T&& predecessor = T())
     {
-        return ContextPredecessor(std::make_unique<T>(predecessor));
+        return ContextPredecessor(std::make_unique<std::decay_t<T>>(std::forward<T>(predecessor)));
     }
 
     template <class T, typename = typename std::enable_if_t<!std::is_same_v<std::remove_reference_t<T>, ContextPredecessor> && std::is_base_of_v<SimplePredecessor, std::remove_reference_t<T>>>>
@@ -64,9 +64,6 @@ public:
             throw std::runtime_error("Context not found.");
 
         auto predecessor = dynamic_cast<std::add_pointer_t<T>>(iterator->second.get());
-
-        if (predecessor == nullptr)
-            throw std::runtime_error("Invalid type for dynamic_cast.");
 
         return foundation::ObserverPointer<T>(predecessor);
     }

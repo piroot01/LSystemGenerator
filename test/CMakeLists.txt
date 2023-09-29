@@ -24,6 +24,7 @@ set(GRAMMAR_TESTS
     Grammar/ParameterMap.test.cpp
     Grammar/ParametrizedPredecessor.test.cpp
     Grammar/ContextPredecessor.test.cpp
+    Grammar/SymbolRegister.test.cpp
 )
 
 

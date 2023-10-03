@@ -1,9 +1,9 @@
-#include <LSystemGenerator/Grammar/SymbolRegister.hpp>
+#include <LSystemGenerator/Grammar/SymbolRegistry.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <type_traits>
 
 
-TEST_CASE("[Grammar] ls::SymbolRegister")
+TEST_CASE("[Grammar] ls::SymbolRegistry")
 {
     typedef double TestType;
 

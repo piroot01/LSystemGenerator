@@ -26,6 +26,9 @@ set(GRAMMAR_TESTS
     Grammar/ContextPredecessor.test.cpp
     Grammar/SymbolRegistry.test.cpp
     Grammar/Condition.test.cpp
+    Grammar/Successor.test.cpp
+    Grammar/SimpleSuccessor.test.cpp
+    Grammar/ParametrizedSuccessor.test.cpp
 )
 
 

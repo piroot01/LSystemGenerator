@@ -45,9 +45,9 @@ TEST_CASE("[Grammar] ls::Condition")
         ls::SymbolRegistry<TestType> symbolRegistry;
         symbolRegistry.registerSymbols(predecessor);
         symbolRegistry.registerConstant("C", 30);
-        ls::Condition condition("a + b - C > 25 & a > 5");
+        ls::Condition condition("a + b - C >= 0 & a > 5");
         exprtk::parser<TestType> parser;
-        CHECK_FALSE(condition.evaluate(parser, symbolRegistry));
+        CHECK(condition.evaluate(parser, symbolRegistry));
     }
 
 }

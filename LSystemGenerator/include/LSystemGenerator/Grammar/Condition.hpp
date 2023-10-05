@@ -38,7 +38,6 @@ private:
 };
 
 
-
 } // namespace ls
 
 
